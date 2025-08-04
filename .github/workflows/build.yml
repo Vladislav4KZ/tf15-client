@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - test
 
 jobs:
   android:
@@ -25,21 +25,21 @@ jobs:
       - name: Build
         run: ./gradlew assembleDebug
         working-directory: android
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: android/app/build/outputs/apk/debug
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
+#      - name: Sign APK
+#        uses: r0adkll/sign-android-release@v1
+#        with:
+#          releaseDirectory: android/app/build/outputs/apk/debug
+#          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+#          alias: ${{ secrets.ALIAS }}
+#          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+#          keyPassword: ${{ secrets.KEY_PASSWORD }}
+#        env:
+#          BUILD_TOOLS_VERSION: "34.0.0"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Android
-          path: android/app/build/outputs/apk/debug/app-debug-signed.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
   windows:
     name: Windows
     runs-on: windows-latest
@@ -120,7 +120,7 @@ jobs:
           repo: ${{ env.GITHUB_REPOSITORY }}
       - name: Prepare release
         run: |
-          mv Android/app-debug-signed.apk TF15Client-Android.apk
+          mv Android/app-debug.apk TF15Client-Android.apk
 
           mv */*.zip .
           mv */*.tar.gz .
